@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface RequestsScreenProps {
   onBack: () => void;
@@ -28,22 +29,23 @@ interface Request {
 }
 
 const RequestsScreen = ({ onBack }: RequestsScreenProps) => {
+  const { t, language } = useLanguage();
   const [requests, setRequests] = useState<Request[]>([
     {
       id: '1',
-      title: 'Протечка в ванной',
+      title: language === 'ru' ? 'Протечка в ванной' : 'Оби дар ҳаммом',
       category: 'plumbing',
       status: 'in_progress',
       date: '2026-01-10',
-      description: 'Течет кран под раковиной',
+      description: language === 'ru' ? 'Течет кран под раковиной' : 'Аз крани зери раковина об мерезад',
     },
     {
       id: '2',
-      title: 'Не работает свет',
+      title: language === 'ru' ? 'Не работает свет' : 'Барқ кор намекунад',
       category: 'electricity',
       status: 'new',
       date: '2026-01-11',
-      description: 'Пропало освещение на 5 этаже',
+      description: language === 'ru' ? 'Пропало освещение на 5 этаже' : 'Дар табақаи 5-ум рӯшноӣ нест',
     },
   ]);
 
@@ -56,30 +58,23 @@ const RequestsScreen = ({ onBack }: RequestsScreenProps) => {
     photos: [] as string[],
   });
 
-  const statusColors: Record<RequestStatus, string> = {
-    new: 'bg-blue-500',
-    in_progress: 'bg-yellow-500',
-    completed: 'bg-green-500',
-  };
-
-  const statusLabels: Record<RequestStatus, string> = {
-    new: 'Открыта',
-    in_progress: 'В работе',
-    completed: 'Закрыта',
-  };
-
   const categories = [
-    { value: 'plumbing', label: 'Сантехника', icon: '💧', color: 'bg-blue-50 text-blue-600' },
-    { value: 'electricity', label: 'Электрика', icon: '⚡', color: 'bg-yellow-50 text-yellow-600' },
-    { value: 'elevator', label: 'Лифт', icon: '🛗', color: 'bg-purple-50 text-purple-600' },
-    { value: 'heating', label: 'Отопление', icon: '🔥', color: 'bg-orange-50 text-orange-600' },
-    { value: 'common_area', label: 'Общие зоны', icon: '🏢', color: 'bg-green-50 text-green-600' },
-    { value: 'other', label: 'Другое', icon: '📋', color: 'bg-gray-50 text-gray-600' },
+    { value: 'plumbing', label: t.requests.plumbing, icon: '💧', color: 'bg-blue-50 text-blue-600' },
+    { value: 'electricity', label: t.requests.electricity, icon: '⚡', color: 'bg-yellow-50 text-yellow-600' },
+    { value: 'elevator', label: t.requests.elevator, icon: '🛗', color: 'bg-purple-50 text-purple-600' },
+    { value: 'heating', label: t.requests.heating, icon: '🔥', color: 'bg-orange-50 text-orange-600' },
+    { value: 'common_area', label: t.requests.commonArea, icon: '🏢', color: 'bg-green-50 text-green-600' },
+    { value: 'other', label: t.requests.other, icon: '📋', color: 'bg-gray-50 text-gray-600' },
   ];
 
   const handleCreateRequest = () => {
     if (!newRequest.title || !newRequest.category || !newRequest.description) {
-      toast.error('Заполните все обязательные поля');
+      toast.error(t.requests.fillRequired);
+      return;
+    }
+
+    if (newRequest.description.length < 20) {
+      toast.error(t.requests.minChars);
       return;
     }
 
@@ -96,12 +91,12 @@ const RequestsScreen = ({ onBack }: RequestsScreenProps) => {
     setRequests([request, ...requests]);
     setNewRequest({ title: '', category: '', description: '', location: '', photos: [] });
     setShowNewRequestDialog(false);
-    toast.success('Заявка успешно создана!');
+    toast.success(t.requests.created);
   };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('ru-RU', {
+    return new Intl.DateTimeFormat(language === 'ru' ? 'ru-RU' : 'tg-TJ', {
       day: 'numeric',
       month: 'long',
     }).format(date);
@@ -120,8 +115,8 @@ const RequestsScreen = ({ onBack }: RequestsScreenProps) => {
             <Icon name="ArrowLeft" size={24} />
           </Button>
           <div className="flex-1">
-            <h1 className="text-xl font-bold text-gray-900">Заявки</h1>
-            <p className="text-sm text-gray-600">Всего заявок — {requests.length}</p>
+            <h1 className="text-xl font-bold text-gray-900">{t.requests.title}</h1>
+            <p className="text-sm text-gray-600">{t.requests.totalRequests} — {requests.length}</p>
           </div>
         </div>
       </div>
@@ -142,9 +137,9 @@ const RequestsScreen = ({ onBack }: RequestsScreenProps) => {
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <div>
                         <h3 className="font-semibold text-gray-900 mb-1">
-                          №{request.id.slice(-4)} {request.status === 'new' && 'открыта'}
-                          {request.status === 'in_progress' && 'в работе'}
-                          {request.status === 'completed' && 'закрыта'}
+                          №{request.id.slice(-4)} {request.status === 'new' && t.requests.opened}
+                          {request.status === 'in_progress' && t.requests.inProgress}
+                          {request.status === 'completed' && t.requests.closed}
                         </h3>
                         <p className="text-sm text-gray-600">{request.description}</p>
                       </div>
@@ -158,9 +153,9 @@ const RequestsScreen = ({ onBack }: RequestsScreenProps) => {
                         } shrink-0`}
                         variant="outline"
                       >
-                        {request.status === 'new' && 'Платная'}
-                        {request.status === 'in_progress' && 'Платная'}
-                        {request.status === 'completed' && 'Закрыта'}
+                        {request.status === 'new' && t.requests.paid}
+                        {request.status === 'in_progress' && t.requests.paid}
+                        {request.status === 'completed' && t.requests.statusCompleted}
                       </Badge>
                     </div>
 
@@ -183,21 +178,21 @@ const RequestsScreen = ({ onBack }: RequestsScreenProps) => {
         className="fixed bottom-24 right-4 h-14 px-6 rounded-full shadow-lg bg-green-500 hover:bg-green-600 text-white font-semibold"
       >
         <Icon name="Plus" size={20} className="mr-2" />
-        Создать заявку
+        {t.requests.createRequest}
       </Button>
 
       {/* Диалог новой заявки */}
       <Dialog open={showNewRequestDialog} onOpenChange={setShowNewRequestDialog}>
         <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold">Новая заявка</DialogTitle>
+            <DialogTitle className="text-xl font-bold">{t.requests.newRequest}</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-5">
             {/* Выбор категории */}
             <div>
               <Label className="text-sm font-semibold text-gray-900 mb-3 block">
-                Категория проблемы <span className="text-red-500">*</span>
+                {t.requests.categoryRequired}
               </Label>
               <div className="grid grid-cols-3 gap-2">
                 {categories.map((cat) => (
@@ -221,81 +216,78 @@ const RequestsScreen = ({ onBack }: RequestsScreenProps) => {
             {/* Заголовок */}
             <div>
               <Label htmlFor="title" className="text-sm font-semibold text-gray-900 mb-2 block">
-                Заголовок <span className="text-red-500">*</span>
+                {t.requests.titleRequired}
               </Label>
-              <div className="relative">
-                <Icon name="FileText" size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <Input
-                  id="title"
-                  placeholder="Кратко опишите проблему"
-                  value={newRequest.title}
-                  onChange={(e) => setNewRequest({ ...newRequest, title: e.target.value })}
-                  className="pl-10 h-12 rounded-xl border-gray-300"
-                />
-              </div>
+              <Input
+                id="title"
+                placeholder={t.requests.titlePlaceholder}
+                value={newRequest.title}
+                onChange={(e) => setNewRequest({ ...newRequest, title: e.target.value })}
+                className="h-11"
+              />
             </div>
 
             {/* Местоположение */}
             <div>
               <Label htmlFor="location" className="text-sm font-semibold text-gray-900 mb-2 block">
-                Местоположение
+                {t.requests.location}
               </Label>
-              <div className="relative">
-                <Icon name="MapPin" size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <Input
-                  id="location"
-                  placeholder="Где находится проблема?"
-                  value={newRequest.location}
-                  onChange={(e) => setNewRequest({ ...newRequest, location: e.target.value })}
-                  className="pl-10 h-12 rounded-xl border-gray-300"
-                />
-              </div>
+              <Input
+                id="location"
+                placeholder={t.requests.locationPlaceholder}
+                value={newRequest.location}
+                onChange={(e) => setNewRequest({ ...newRequest, location: e.target.value })}
+                className="h-11"
+              />
             </div>
 
             {/* Описание */}
             <div>
               <Label htmlFor="description" className="text-sm font-semibold text-gray-900 mb-2 block">
-                Подробное описание <span className="text-red-500">*</span>
+                {t.requests.descriptionRequired}
               </Label>
               <Textarea
                 id="description"
-                placeholder="Опишите проблему детально: что случилось, когда заметили, какие есть последствия..."
+                placeholder={t.requests.descriptionPlaceholder}
                 value={newRequest.description}
                 onChange={(e) => setNewRequest({ ...newRequest, description: e.target.value })}
-                className="min-h-[120px] rounded-xl border-gray-300 resize-none"
+                rows={4}
+                className="resize-none"
               />
-              <p className="text-xs text-gray-500 mt-2">Минимум 20 символов</p>
+              <p className="text-xs text-gray-500 mt-1">
+                {t.requests.minChars} ({newRequest.description.length}/20)
+              </p>
             </div>
 
             {/* Фото */}
             <div>
               <Label className="text-sm font-semibold text-gray-900 mb-2 block">
-                Прикрепить фото
+                {t.requests.attachPhoto}
               </Label>
-              <button
+              <Button
                 type="button"
-                className="w-full h-32 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors flex flex-col items-center justify-center gap-2"
+                variant="outline"
+                className="w-full h-24 border-2 border-dashed border-gray-300 hover:border-blue-400 hover:bg-blue-50"
               >
-                <Icon name="Camera" size={32} className="text-gray-400" />
-                <span className="text-sm text-gray-600 font-medium">Добавить фото</span>
-                <span className="text-xs text-gray-500">Максимум 5 фото</span>
-              </button>
+                <div className="flex flex-col items-center gap-2">
+                  <Icon name="Camera" size={28} className="text-gray-400" />
+                  <span className="text-sm font-medium text-gray-600">{t.requests.addPhoto}</span>
+                  <span className="text-xs text-gray-500">{t.requests.maxPhotos}</span>
+                </div>
+              </Button>
             </div>
 
             {/* Кнопки */}
             <div className="flex gap-3 pt-2">
               <Button
                 variant="outline"
-                className="flex-1 h-12 rounded-xl font-semibold"
                 onClick={() => setShowNewRequestDialog(false)}
+                className="flex-1"
               >
-                Отмена
+                {t.cancel}
               </Button>
-              <Button
-                className="flex-1 h-12 rounded-xl bg-green-500 hover:bg-green-600 font-semibold"
-                onClick={handleCreateRequest}
-              >
-                Создать заявку
+              <Button onClick={handleCreateRequest} className="flex-1 bg-green-500 hover:bg-green-600">
+                {t.requests.createRequest}
               </Button>
             </div>
           </div>
