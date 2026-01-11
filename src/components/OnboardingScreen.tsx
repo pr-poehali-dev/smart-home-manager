@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 
 interface OnboardingScreenProps {
@@ -12,39 +11,40 @@ const OnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
 
   const slides = [
     {
-      icon: 'Building2',
+      icon: '🏠',
       title: 'Добро пожаловать',
-      description: 'Управляйте своим домом в одном приложении',
-      gradient: 'from-blue-500 to-cyan-500',
+      description: 'Управляйте своим домом\nв одном приложении',
+      gradient: 'from-blue-500 to-purple-500',
     },
     {
-      icon: 'Sparkles',
-      title: 'Всё что нужно',
-      description: 'Отправляйте заявки, оплачивайте услуги, получайте важные уведомления, контролируйте дом',
+      title: 'Что можно делать',
+      description: 'Всё необходимое для комфортной жизни',
       features: [
-        { icon: 'Wrench', text: 'Заявки' },
-        { icon: 'Wallet', text: 'Платежи' },
-        { icon: 'Bell', text: 'Уведомления' },
-        { icon: 'Home', text: 'Контроль' },
+        { emoji: '🛠', text: 'Отправлять заявки' },
+        { emoji: '💳', text: 'Оплачивать услуги' },
+        { emoji: '📢', text: 'Получать уведомления' },
+        { emoji: '🏠', text: 'Контролировать дом' },
+        { emoji: '🎥', text: 'Смотреть камеры' },
+        { emoji: '💬', text: 'Общаться с соседями' },
       ],
       gradient: 'from-purple-500 to-pink-500',
     },
     {
-      icon: 'Zap',
+      icon: '⚡',
       title: 'Заявки в 1 клик',
-      description: 'Фото, описание — и мы уже работаем',
-      gradient: 'from-orange-500 to-red-500',
-    },
-    {
-      icon: 'Bot',
-      title: 'Умный помощник',
-      description: 'Поможем 24/7: подскажем, оформим заявку, напомним',
+      description: 'Фото, описание —\nи мы уже работаем',
       gradient: 'from-green-500 to-emerald-500',
     },
     {
-      icon: 'ShieldCheck',
+      icon: '🤖',
+      title: 'Умный помощник',
+      description: 'Поможем 24/7:\nподскажем, оформим заявку, напомним',
+      gradient: 'from-orange-500 to-red-500',
+    },
+    {
+      icon: '🔒',
       title: 'Безопасность',
-      description: 'Ваш дом под контролем',
+      description: 'Камеры, доступ и контроль\nвашего дома',
       gradient: 'from-indigo-500 to-blue-500',
     },
   ];
@@ -64,59 +64,68 @@ const OnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md p-8 animate-fade-in">
-        <div className="flex justify-end mb-4">
-          {currentSlide < slides.length - 1 && (
-            <Button variant="ghost" size="sm" onClick={handleSkip}>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="flex-1 flex flex-col items-center justify-center p-6">
+        {currentSlide < slides.length - 1 && (
+          <div className="absolute top-6 right-6">
+            <Button variant="ghost" size="sm" onClick={handleSkip} className="text-gray-500">
               Пропустить
             </Button>
-          )}
-        </div>
-
-        <div className="text-center space-y-6">
-          <div
-            className={`w-24 h-24 mx-auto rounded-full bg-gradient-to-br ${currentSlideData.gradient} flex items-center justify-center animate-scale-in`}
-          >
-            <Icon name={currentSlideData.icon} className="text-white" size={48} />
           </div>
+        )}
 
-          <div>
-            <h2 className="text-3xl font-heading font-bold mb-3">{currentSlideData.title}</h2>
-            <p className="text-gray-600 text-lg">{currentSlideData.description}</p>
+        <div className="w-full max-w-md text-center space-y-8 animate-fade-in">
+          {currentSlideData.icon && (
+            <div
+              className={`w-32 h-32 mx-auto rounded-3xl bg-gradient-to-br ${currentSlideData.gradient} flex items-center justify-center shadow-2xl animate-scale-in`}
+            >
+              <span className="text-6xl">{currentSlideData.icon}</span>
+            </div>
+          )}
+
+          <div className="space-y-4">
+            <h2 className="text-3xl font-bold text-gray-900">{currentSlideData.title}</h2>
+            <p className="text-lg text-gray-600 whitespace-pre-line leading-relaxed">
+              {currentSlideData.description}
+            </p>
           </div>
 
           {currentSlideData.features && (
-            <div className="grid grid-cols-2 gap-3 mt-6">
+            <div className="grid grid-cols-2 gap-4 mt-8">
               {currentSlideData.features.map((feature, index) => (
                 <div
                   key={index}
-                  className="p-4 bg-gradient-to-br from-white to-gray-50 rounded-xl border border-gray-200 animate-scale-in"
+                  className="p-4 bg-white rounded-2xl border border-gray-200 shadow-sm animate-scale-in"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <Icon name={feature.icon} className="text-primary mb-2" size={32} />
-                  <p className="text-sm font-medium">{feature.text}</p>
+                  <span className="text-4xl mb-2 block">{feature.emoji}</span>
+                  <p className="text-sm font-medium text-gray-900">{feature.text}</p>
                 </div>
               ))}
             </div>
           )}
-
-          <div className="flex justify-center gap-2 py-4">
-            {slides.map((_, index) => (
-              <div
-                key={index}
-                className={`h-2 rounded-full transition-all ${
-                  index === currentSlide ? 'w-8 bg-primary' : 'w-2 bg-gray-300'
-                }`}
-              />
-            ))}
-          </div>
-
-          <Button onClick={handleNext} className="w-full py-6 text-lg" size="lg">
-            {currentSlide === slides.length - 1 ? 'Перейти к входу' : 'Начать'}
-          </Button>
         </div>
-      </Card>
+      </div>
+
+      <div className="p-6 space-y-6">
+        <div className="flex justify-center gap-2">
+          {slides.map((_, index) => (
+            <div
+              key={index}
+              className={`h-2 rounded-full transition-all ${
+                index === currentSlide ? 'w-8 bg-blue-600' : 'w-2 bg-gray-300'
+              }`}
+            />
+          ))}
+        </div>
+
+        <Button
+          onClick={handleNext}
+          className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+        >
+          {currentSlide === slides.length - 1 ? 'Начать пользоваться' : 'Далее'}
+        </Button>
+      </div>
     </div>
   );
 };

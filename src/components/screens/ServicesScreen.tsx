@@ -35,7 +35,7 @@ const ServicesScreen = ({ onBack }: ServicesScreenProps) => {
       id: '1',
       title: 'Строительные работы',
       icon: '🔨',
-      color: 'from-orange-100 to-orange-200',
+      color: 'from-orange-50 to-orange-100',
       description: 'Ремонт, отделка, установка конструкций',
       price: 'от 1500 ₽/час',
       rating: 4.8,
@@ -45,7 +45,7 @@ const ServicesScreen = ({ onBack }: ServicesScreenProps) => {
       id: '2',
       title: 'Электрика',
       icon: '⚡',
-      color: 'from-purple-100 to-purple-200',
+      color: 'from-purple-50 to-purple-100',
       description: 'Установка розеток, светильников, ремонт проводки',
       price: 'от 1200 ₽/час',
       rating: 4.9,
@@ -55,7 +55,7 @@ const ServicesScreen = ({ onBack }: ServicesScreenProps) => {
       id: '3',
       title: 'Уборка помещений',
       icon: '🧹',
-      color: 'from-green-100 to-green-200',
+      color: 'from-green-50 to-green-100',
       description: 'Генеральная, поддерживающая уборка квартиры',
       price: 'от 2500 ₽',
       rating: 4.7,
@@ -65,7 +65,7 @@ const ServicesScreen = ({ onBack }: ServicesScreenProps) => {
       id: '4',
       title: 'Сантехника',
       icon: '🔧',
-      color: 'from-blue-100 to-blue-200',
+      color: 'from-blue-50 to-blue-100',
       description: 'Установка, ремонт сантехники и труб',
       price: 'от 1000 ₽/час',
       rating: 4.8,
@@ -73,49 +73,9 @@ const ServicesScreen = ({ onBack }: ServicesScreenProps) => {
     },
     {
       id: '5',
-      title: 'Доставка воды',
-      icon: '💧',
-      color: 'from-cyan-100 to-cyan-200',
-      description: 'Доставка питьевой воды 19л',
-      price: '350 ₽/бутыль',
-      rating: 4.9,
-      reviews: 234,
-    },
-    {
-      id: '6',
-      title: 'Клининг',
-      icon: '✨',
-      color: 'from-pink-100 to-pink-200',
-      description: 'Химчистка мебели, ковров, матрасов',
-      price: 'от 1500 ₽',
-      rating: 4.6,
-      reviews: 72,
-    },
-    {
-      id: '7',
-      title: 'Мастер на час',
-      icon: '🔩',
-      color: 'from-yellow-100 to-yellow-200',
-      description: 'Мелкий ремонт, сборка мебели',
-      price: '800 ₽/час',
-      rating: 4.7,
-      reviews: 145,
-    },
-    {
-      id: '8',
-      title: 'Грузоперевозки',
-      icon: '🚚',
-      color: 'from-red-100 to-red-200',
-      description: 'Перевозка мебели, грузчики',
-      price: 'от 2000 ₽',
-      rating: 4.8,
-      reviews: 91,
-    },
-    {
-      id: '9',
       title: 'Другое',
       icon: '➕',
-      color: 'from-gray-100 to-gray-200',
+      color: 'from-gray-50 to-gray-100',
       description: 'Другие бытовые услуги',
       price: 'По договоренности',
       rating: 4.5,
@@ -146,26 +106,21 @@ const ServicesScreen = ({ onBack }: ServicesScreenProps) => {
 
       {/* Сетка услуг */}
       <div className="p-4">
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-4">
           {services.map((service) => (
             <Card
               key={service.id}
-              className="cursor-pointer hover:shadow-lg transition-all border-0 overflow-hidden"
+              className="cursor-pointer hover:shadow-md transition-all border border-gray-200 overflow-hidden rounded-3xl"
               onClick={() => setSelectedService(service)}
             >
-              <div className={`h-32 bg-gradient-to-br ${service.color} flex items-center justify-center`}>
-                <span className="text-5xl">{service.icon}</span>
+              <div className={`h-40 bg-gradient-to-br ${service.color} flex items-center justify-center`}>
+                <span className="text-6xl">{service.icon}</span>
               </div>
-              <CardContent className="p-3">
-                <h3 className="font-semibold text-gray-900 text-sm mb-1 line-clamp-2">
+              <CardContent className="p-4">
+                <h3 className="font-bold text-gray-900 text-base mb-3 line-clamp-2 min-h-[48px]">
                   {service.title}
                 </h3>
-                <div className="flex items-center gap-1 text-xs text-gray-600 mb-2">
-                  <Icon name="Star" size={12} className="text-yellow-500 fill-yellow-500" />
-                  <span>{service.rating}</span>
-                  <span>({service.reviews})</span>
-                </div>
-                <p className="text-xs font-semibold text-blue-600">{service.price}</p>
+                <p className="text-sm font-semibold text-gray-700">{service.price}</p>
               </CardContent>
             </Card>
           ))}
