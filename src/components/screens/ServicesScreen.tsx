@@ -156,61 +156,84 @@ const ServicesScreen = ({ onBack }: ServicesScreenProps) => {
               <p className="text-xl font-bold text-blue-600">{selectedService?.price}</p>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">
-                  Желаемая дата
+                <label className="text-sm font-semibold text-gray-900 mb-2 block">
+                  Желаемая дата <span className="text-red-500">*</span>
                 </label>
-                <Input
-                  type="date"
-                  value={orderDetails.date}
-                  onChange={(e) =>
-                    setOrderDetails({ ...orderDetails, date: e.target.value })
-                  }
-                />
+                <div className="relative">
+                  <Icon name="Calendar" size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <Input
+                    type="date"
+                    value={orderDetails.date}
+                    onChange={(e) =>
+                      setOrderDetails({ ...orderDetails, date: e.target.value })
+                    }
+                    className="pl-10 h-12 rounded-xl border-gray-300"
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">
-                  Желаемое время
+                <label className="text-sm font-semibold text-gray-900 mb-2 block">
+                  Желаемое время <span className="text-red-500">*</span>
                 </label>
-                <Input
-                  type="time"
-                  value={orderDetails.time}
-                  onChange={(e) =>
-                    setOrderDetails({ ...orderDetails, time: e.target.value })
-                  }
-                />
+                <div className="relative">
+                  <Icon name="Clock" size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <Input
+                    type="time"
+                    value={orderDetails.time}
+                    onChange={(e) =>
+                      setOrderDetails({ ...orderDetails, time: e.target.value })
+                    }
+                    className="pl-10 h-12 rounded-xl border-gray-300"
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">
+                <label className="text-sm font-semibold text-gray-900 mb-2 block">
                   Комментарий к заказу
                 </label>
                 <Textarea
-                  placeholder="Опишите подробности..."
+                  placeholder="Опишите подробности: объем работ, особые требования..."
                   value={orderDetails.comment}
                   onChange={(e) =>
                     setOrderDetails({ ...orderDetails, comment: e.target.value })
                   }
-                  rows={3}
+                  rows={4}
+                  className="rounded-xl border-gray-300 resize-none"
                 />
+              </div>
+
+              <div>
+                <label className="text-sm font-semibold text-gray-900 mb-2 block">
+                  Контактный телефон <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <Icon name="Phone" size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <Input
+                    type="tel"
+                    placeholder="+7 (___) ___-__-__"
+                    className="pl-10 h-12 rounded-xl border-gray-300"
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex gap-3 pt-2">
               <Button
                 variant="outline"
-                className="flex-1"
+                className="flex-1 h-12 rounded-xl font-semibold"
                 onClick={() => setSelectedService(null)}
               >
                 Отмена
               </Button>
               <Button
-                className="flex-1 bg-blue-500 hover:bg-blue-600"
+                className="flex-1 h-12 rounded-xl bg-green-500 hover:bg-green-600 font-semibold"
                 onClick={handleOrderService}
               >
-                Заказать
+                Заказать услугу
               </Button>
             </div>
           </div>

@@ -64,12 +64,11 @@ const MainApp = ({ userData, onLogout }: MainAppProps) => {
     }
   };
 
-  if (currentScreen !== 'home') {
-    return <div className="min-h-screen bg-gray-50">{renderScreen()}</div>;
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
+      {currentScreen !== 'home' && renderScreen()}
+      {currentScreen === 'home' && (
+        <>
       {/* Шапка с адресом */}
       <div className="bg-white px-4 py-3 flex items-center justify-between border-b border-gray-200">
         <div className="flex items-center gap-2">
@@ -261,23 +260,26 @@ const MainApp = ({ userData, onLogout }: MainAppProps) => {
         </div>
       </div>
 
-      {/* Нижняя навигация */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 safe-area-inset-bottom">
+        </>
+      )}
+
+      {/* Нижняя навигация - всегда видна */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
         <div className="grid grid-cols-5 px-2 py-2">
           <button
             onClick={() => setCurrentScreen('home')}
             className="flex flex-col items-center gap-1 py-2"
           >
-            <Icon name="Home" size={24} className="text-gray-900" />
-            <span className="text-[10px] font-medium text-gray-900">Дома</span>
+            <Icon name="Home" size={24} className={currentScreen === 'home' ? 'text-blue-600' : 'text-gray-400'} />
+            <span className={`text-[10px] font-medium ${currentScreen === 'home' ? 'text-blue-600' : 'text-gray-400'}`}>Дома</span>
           </button>
 
           <button
             onClick={() => setCurrentScreen('payments')}
             className="flex flex-col items-center gap-1 py-2"
           >
-            <Icon name="CreditCard" size={24} className="text-gray-400" />
-            <span className="text-[10px] text-gray-400">Оплаты</span>
+            <Icon name="CreditCard" size={24} className={currentScreen === 'payments' ? 'text-blue-600' : 'text-gray-400'} />
+            <span className={`text-[10px] ${currentScreen === 'payments' ? 'text-blue-600' : 'text-gray-400'}`}>Оплаты</span>
           </button>
 
           <button
@@ -285,26 +287,26 @@ const MainApp = ({ userData, onLogout }: MainAppProps) => {
             className="flex flex-col items-center gap-1 py-2 relative"
           >
             <div className="relative">
-              <Icon name="FileText" size={24} className="text-gray-400" />
+              <Icon name="FileText" size={24} className={currentScreen === 'requests' ? 'text-blue-600' : 'text-gray-400'} />
               <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
             </div>
-            <span className="text-[10px] text-gray-400">Заявки</span>
+            <span className={`text-[10px] ${currentScreen === 'requests' ? 'text-blue-600' : 'text-gray-400'}`}>Заявки</span>
           </button>
 
           <button
             onClick={() => setCurrentScreen('chat')}
             className="flex flex-col items-center gap-1 py-2"
           >
-            <Icon name="MessageCircle" size={24} className="text-gray-400" />
-            <span className="text-[10px] text-gray-400">Чаты</span>
+            <Icon name="MessageCircle" size={24} className={currentScreen === 'chat' ? 'text-blue-600' : 'text-gray-400'} />
+            <span className={`text-[10px] ${currentScreen === 'chat' ? 'text-blue-600' : 'text-gray-400'}`}>Чаты</span>
           </button>
 
           <button
             onClick={() => setCurrentScreen('services')}
             className="flex flex-col items-center gap-1 py-2"
           >
-            <Icon name="LayoutGrid" size={24} className="text-gray-400" />
-            <span className="text-[10px] text-gray-400">Услуги</span>
+            <Icon name="LayoutGrid" size={24} className={currentScreen === 'services' ? 'text-blue-600' : 'text-gray-400'} />
+            <span className={`text-[10px] ${currentScreen === 'services' ? 'text-blue-600' : 'text-gray-400'}`}>Услуги</span>
           </button>
         </div>
       </div>
