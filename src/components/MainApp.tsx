@@ -70,10 +70,21 @@ const MainApp = ({ userData, onLogout }: MainAppProps) => {
       {currentScreen === 'home' && (
         <>
       {/* Шапка с адресом */}
-      <div className="bg-white px-4 py-3 flex items-center justify-between border-b border-gray-200">
-        <div className="flex items-center gap-2">
-          <Icon name="MapPin" size={16} className="text-gray-500" />
-          <span className="text-sm text-gray-900">{userData.complex}, д. 33, кв. {userData.apartment}</span>
+      <div className="bg-white px-4 py-4 flex items-center justify-between border-b border-gray-200">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setCurrentScreen('profile')}
+            className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold shadow-md"
+          >
+            {userData.apartment}
+          </button>
+          <div>
+            <div className="flex items-center gap-2">
+              <Icon name="MapPin" size={14} className="text-gray-500" />
+              <span className="text-sm font-medium text-gray-900">{userData.complex}</span>
+            </div>
+            <span className="text-xs text-gray-600">д. 33, кв. {userData.apartment}</span>
+          </div>
         </div>
         <Button
           variant="ghost"
@@ -90,28 +101,30 @@ const MainApp = ({ userData, onLogout }: MainAppProps) => {
       <div className="p-4">
         <div
           onClick={() => setCurrentScreen('payments')}
-          className="bg-gradient-to-br from-blue-500 to-purple-500 rounded-3xl p-5 text-white cursor-pointer shadow-lg"
+          className="bg-gradient-to-br from-blue-500 to-purple-500 rounded-3xl p-6 text-white cursor-pointer shadow-xl relative overflow-hidden"
         >
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-sm opacity-90 mb-1">Мой баланс: {balance} ₽ 👍</p>
-              <p className="text-xs opacity-75">1 мая спишем {nextPayment} ₽</p>
-            </div>
-            <Icon name="ChevronRight" size={24} />
-          </div>
-
-          <div className="space-y-3">
-            <div className="flex items-center justify-between py-2 border-t border-white/20">
-              <span className="text-sm">Экономить до 15% с абонементом</span>
-              <div className="w-12 h-6 bg-white/30 rounded-full"></div>
+          <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full"></div>
+          <div className="absolute -right-4 top-16 w-20 h-20 bg-white/10 rounded-full"></div>
+          
+          <div className="relative">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <p className="text-xs opacity-75 mb-1">Баланс лицевого счета</p>
+                <p className="text-3xl font-bold">{balance} ₽</p>
+              </div>
+              <Icon name="Wallet" size={32} className="opacity-80" />
             </div>
 
-            <div className="flex items-center justify-between py-2 border-t border-white/20">
-              <span className="text-sm">Настроить автоплатёж</span>
-              <div className="w-12 h-6 bg-white/30 rounded-full"></div>
+            <div className="bg-white/20 rounded-2xl p-4 mb-4 backdrop-blur-sm">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium">Следующий платеж</span>
+                <span className="text-xs opacity-75">1 мая</span>
+              </div>
+              <p className="text-2xl font-bold">{nextPayment} ₽</p>
             </div>
 
-            <Button className="w-full bg-white text-blue-600 hover:bg-white/90 font-semibold mt-2">
+            <Button className="w-full bg-white text-blue-600 hover:bg-white/90 font-semibold h-12 rounded-xl shadow-md">
+              <Icon name="Plus" size={20} className="mr-2" />
               Пополнить баланс
             </Button>
           </div>
@@ -120,61 +133,57 @@ const MainApp = ({ userData, onLogout }: MainAppProps) => {
 
       {/* Быстрые действия */}
       <div className="px-4 mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-gray-900">Быстрые действия</h2>
-          <Button variant="ghost" size="sm" className="text-blue-600 text-sm">
-            Настроить
-          </Button>
-        </div>
+        <h2 className="text-lg font-bold text-gray-900 mb-4">Быстрые действия</h2>
 
-        <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
+        <div className="grid grid-cols-4 gap-3">
           <button
             onClick={() => setCurrentScreen('requests')}
-            className="flex-shrink-0 w-32 p-4 bg-white rounded-2xl border border-gray-200 flex flex-col items-center gap-2"
+            className="flex flex-col items-center gap-2 p-3 bg-white rounded-2xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all"
           >
-            <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
-              <Icon name="FileText" className="text-blue-600" size={24} />
+            <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center relative">
+              <Icon name="FileText" className="text-blue-600" size={22} />
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">2</span>
             </div>
-            <span className="text-xs font-medium text-gray-900">Заявки</span>
+            <span className="text-xs font-medium text-gray-900 text-center">Заявки</span>
           </button>
 
           <button
             onClick={() => setCurrentScreen('payments')}
-            className="flex-shrink-0 w-32 p-4 bg-white rounded-2xl border border-gray-200 flex flex-col items-center gap-2"
+            className="flex flex-col items-center gap-2 p-3 bg-white rounded-2xl border border-gray-200 hover:border-green-300 hover:shadow-md transition-all"
           >
             <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center">
-              <Icon name="CreditCard" className="text-green-600" size={24} />
+              <Icon name="CreditCard" className="text-green-600" size={22} />
             </div>
-            <span className="text-xs font-medium text-gray-900">Оплаты</span>
+            <span className="text-xs font-medium text-gray-900 text-center">Оплаты</span>
           </button>
 
           <button
             onClick={() => setCurrentScreen('cameras')}
-            className="flex-shrink-0 w-32 p-4 bg-white rounded-2xl border border-gray-200 flex flex-col items-center gap-2"
+            className="flex flex-col items-center gap-2 p-3 bg-white rounded-2xl border border-gray-200 hover:border-purple-300 hover:shadow-md transition-all"
           >
             <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center">
-              <Icon name="Video" className="text-purple-600" size={24} />
+              <Icon name="Video" className="text-purple-600" size={22} />
             </div>
-            <span className="text-xs font-medium text-gray-900">Камеры</span>
+            <span className="text-xs font-medium text-gray-900 text-center">Камеры</span>
           </button>
 
           <button
             onClick={() => setCurrentScreen('services')}
-            className="flex-shrink-0 w-32 p-4 bg-white rounded-2xl border border-gray-200 flex flex-col items-center gap-2"
+            className="flex flex-col items-center gap-2 p-3 bg-white rounded-2xl border border-gray-200 hover:border-pink-300 hover:shadow-md transition-all"
           >
             <div className="w-12 h-12 rounded-xl bg-pink-50 flex items-center justify-center">
-              <Icon name="Wrench" className="text-pink-600" size={24} />
+              <Icon name="Wrench" className="text-pink-600" size={22} />
             </div>
-            <span className="text-xs font-medium text-gray-900">Услуги</span>
+            <span className="text-xs font-medium text-gray-900 text-center">Услуги</span>
           </button>
         </div>
       </div>
 
       {/* Все сервисы */}
       <div className="px-4">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Все сервисы</h2>
+        <h2 className="text-lg font-bold text-gray-900 mb-4">Все сервисы</h2>
 
-        <div className="bg-white rounded-3xl p-4 border border-gray-200">
+        <div className="bg-white rounded-3xl p-4 border border-gray-200 shadow-sm">
           <div className="grid grid-cols-4 gap-4">
             <button
               onClick={() => setCurrentScreen('requests')}
