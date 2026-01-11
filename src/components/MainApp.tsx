@@ -12,9 +12,6 @@ import NewsScreen from '@/components/screens/NewsScreen';
 import VotingScreen from '@/components/screens/VotingScreen';
 import ResidentsChat from '@/components/screens/ResidentsChat';
 import ServicesScreen from '@/components/screens/ServicesScreen';
-import { useLanguage } from '@/context/LanguageContext';
-import LanguageSwitcher from '@/components/LanguageSwitcher';
-import { formatSomoni } from '@/data/tajikData';
 
 interface MainAppProps {
   userData: any;
@@ -35,11 +32,10 @@ type Screen =
   | 'services';
 
 const MainApp = ({ userData, onLogout }: MainAppProps) => {
-  const { t } = useLanguage();
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
 
-  const balance = 2500;
-  const nextPayment = 1850;
+  const balance = 1500;
+  const nextPayment = 1020;
 
   const renderScreen = () => {
     switch (currentScreen) {
@@ -87,21 +83,18 @@ const MainApp = ({ userData, onLogout }: MainAppProps) => {
               <Icon name="MapPin" size={14} className="text-gray-500" />
               <span className="text-sm font-medium text-gray-900">{userData.complex}</span>
             </div>
-            <span className="text-xs text-gray-600">{t.auth.entrance} {userData.entrance}, {t.home.apartment.toLowerCase()} {userData.apartment}</span>
+            <span className="text-xs text-gray-600">д. 33, кв. {userData.apartment}</span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <LanguageSwitcher />
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative"
-            onClick={() => setCurrentScreen('news')}
-          >
-            <Icon name="Bell" size={22} className="text-gray-600" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative"
+          onClick={() => setCurrentScreen('news')}
+        >
+          <Icon name="Bell" size={22} className="text-gray-600" />
+          <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+        </Button>
       </div>
 
       {/* Карточка баланса */}
@@ -116,23 +109,23 @@ const MainApp = ({ userData, onLogout }: MainAppProps) => {
           <div className="relative">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <p className="text-xs opacity-75 mb-1">{t.home.balance}</p>
-                <p className="text-3xl font-bold">{formatSomoni(balance)}</p>
+                <p className="text-xs opacity-75 mb-1">Баланс лицевого счета</p>
+                <p className="text-3xl font-bold">{balance} ₽</p>
               </div>
               <Icon name="Wallet" size={32} className="opacity-80" />
             </div>
 
             <div className="bg-white/20 rounded-2xl p-4 mb-4 backdrop-blur-sm">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">{t.home.nextPayment}</span>
+                <span className="text-sm font-medium">Следующий платеж</span>
                 <span className="text-xs opacity-75">1 мая</span>
               </div>
-              <p className="text-2xl font-bold">{formatSomoni(nextPayment)}</p>
+              <p className="text-2xl font-bold">{nextPayment} ₽</p>
             </div>
 
             <Button className="w-full bg-white text-blue-600 hover:bg-white/90 font-semibold h-12 rounded-xl shadow-md">
               <Icon name="Plus" size={20} className="mr-2" />
-              {t.home.topUp}
+              Пополнить баланс
             </Button>
           </div>
         </div>
@@ -140,7 +133,7 @@ const MainApp = ({ userData, onLogout }: MainAppProps) => {
 
       {/* Быстрые действия */}
       <div className="px-4 mb-6">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">{t.home.quickActions}</h2>
+        <h2 className="text-lg font-bold text-gray-900 mb-4">Быстрые действия</h2>
 
         <div className="grid grid-cols-4 gap-3">
           <button
@@ -151,7 +144,7 @@ const MainApp = ({ userData, onLogout }: MainAppProps) => {
               <Icon name="FileText" className="text-blue-600" size={22} />
               <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">2</span>
             </div>
-            <span className="text-xs font-medium text-gray-900 text-center">{t.home.requests}</span>
+            <span className="text-xs font-medium text-gray-900 text-center">Заявки</span>
           </button>
 
           <button
@@ -161,7 +154,7 @@ const MainApp = ({ userData, onLogout }: MainAppProps) => {
             <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center">
               <Icon name="CreditCard" className="text-green-600" size={22} />
             </div>
-            <span className="text-xs font-medium text-gray-900 text-center">{t.home.payments}</span>
+            <span className="text-xs font-medium text-gray-900 text-center">Оплаты</span>
           </button>
 
           <button
@@ -171,7 +164,7 @@ const MainApp = ({ userData, onLogout }: MainAppProps) => {
             <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center">
               <Icon name="Video" className="text-purple-600" size={22} />
             </div>
-            <span className="text-xs font-medium text-gray-900 text-center">{t.home.cameras}</span>
+            <span className="text-xs font-medium text-gray-900 text-center">Камеры</span>
           </button>
 
           <button
@@ -181,14 +174,14 @@ const MainApp = ({ userData, onLogout }: MainAppProps) => {
             <div className="w-12 h-12 rounded-xl bg-pink-50 flex items-center justify-center">
               <Icon name="Wrench" className="text-pink-600" size={22} />
             </div>
-            <span className="text-xs font-medium text-gray-900 text-center">{t.home.services}</span>
+            <span className="text-xs font-medium text-gray-900 text-center">Услуги</span>
           </button>
         </div>
       </div>
 
       {/* Все сервисы */}
       <div className="px-4">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">{t.home.allServices}</h2>
+        <h2 className="text-lg font-bold text-gray-900 mb-4">Все сервисы</h2>
 
         <div className="bg-white rounded-3xl p-4 border border-gray-200 shadow-sm">
           <div className="grid grid-cols-4 gap-4">
@@ -199,7 +192,7 @@ const MainApp = ({ userData, onLogout }: MainAppProps) => {
               <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center">
                 <Icon name="FileText" className="text-blue-600" size={28} />
               </div>
-              <span className="text-xs text-gray-700 text-center">{t.home.requests}</span>
+              <span className="text-xs text-gray-700 text-center">Заявки</span>
             </button>
 
             <button
@@ -209,17 +202,28 @@ const MainApp = ({ userData, onLogout }: MainAppProps) => {
               <div className="w-14 h-14 rounded-2xl bg-green-50 flex items-center justify-center">
                 <Icon name="CreditCard" className="text-green-600" size={28} />
               </div>
-              <span className="text-xs text-gray-700 text-center">{t.home.payments}</span>
+              <span className="text-xs text-gray-700 text-center">Счётчики</span>
             </button>
 
             <button
               onClick={() => setCurrentScreen('cameras')}
               className="flex flex-col items-center gap-2 p-2"
             >
-              <div className="w-14 h-14 rounded-2xl bg-purple-50 flex items-center justify-center">
+              <div className="w-14 h-14 rounded-2xl bg-purple-50 flex items-center justify-center relative">
                 <Icon name="Video" className="text-purple-600" size={28} />
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
               </div>
-              <span className="text-xs text-gray-700 text-center">{t.home.cameras}</span>
+              <span className="text-xs text-gray-700 text-center">Камеры</span>
+            </button>
+
+            <button
+              onClick={() => setCurrentScreen('chat')}
+              className="flex flex-col items-center gap-2 p-2"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-orange-50 flex items-center justify-center">
+                <Icon name="MessageCircle" className="text-orange-600" size={28} />
+              </div>
+              <span className="text-xs text-gray-700 text-center">Заявки</span>
             </button>
 
             <button
@@ -227,107 +231,94 @@ const MainApp = ({ userData, onLogout }: MainAppProps) => {
               className="flex flex-col items-center gap-2 p-2"
             >
               <div className="w-14 h-14 rounded-2xl bg-pink-50 flex items-center justify-center">
-                <Icon name="Wrench" className="text-pink-600" size={28} />
+                <Icon name="ShoppingBag" className="text-pink-600" size={28} />
               </div>
-              <span className="text-xs text-gray-700 text-center">{t.home.services}</span>
-            </button>
-
-            <button
-              onClick={() => setCurrentScreen('chat')}
-              className="flex flex-col items-center gap-2 p-2"
-            >
-              <div className="w-14 h-14 rounded-2xl bg-amber-50 flex items-center justify-center relative">
-                <Icon name="MessageCircle" className="text-amber-600" size={28} />
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">3</span>
-              </div>
-              <span className="text-xs text-gray-700 text-center">{t.home.chat}</span>
+              <span className="text-xs text-gray-700 text-center">Услуги</span>
             </button>
 
             <button
               onClick={() => setCurrentScreen('apartment')}
               className="flex flex-col items-center gap-2 p-2"
             >
-              <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center">
-                <Icon name="Gauge" className="text-indigo-600" size={28} />
+              <div className="w-14 h-14 rounded-2xl bg-cyan-50 flex items-center justify-center">
+                <Icon name="Home" className="text-cyan-600" size={28} />
               </div>
-              <span className="text-xs text-gray-700 text-center">{t.home.counters}</span>
-            </button>
-
-            <button
-              onClick={() => setCurrentScreen('apartment')}
-              className="flex flex-col items-center gap-2 p-2"
-            >
-              <div className="w-14 h-14 rounded-2xl bg-teal-50 flex items-center justify-center">
-                <Icon name="Home" className="text-teal-600" size={28} />
-              </div>
-              <span className="text-xs text-gray-700 text-center">{t.home.apartment}</span>
+              <span className="text-xs text-gray-700 text-center">Квартира</span>
             </button>
 
             <button
               onClick={() => setCurrentScreen('voting')}
               className="flex flex-col items-center gap-2 p-2"
             >
-              <div className="w-14 h-14 rounded-2xl bg-orange-50 flex items-center justify-center relative">
-                <Icon name="Vote" className="text-orange-600" size={28} />
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">1</span>
+              <div className="w-14 h-14 rounded-2xl bg-yellow-50 flex items-center justify-center">
+                <Icon name="Vote" className="text-yellow-600" size={28} />
               </div>
-              <span className="text-xs text-gray-700 text-center">{t.home.voting}</span>
-            </button>
-          </div>
-        </div>
-      </div>
-        </>
-      )}
-
-      {/* Нижняя навигация */}
-      {currentScreen === 'home' && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-2 py-3 z-50">
-          <div className="flex items-center justify-around max-w-md mx-auto">
-            <button
-              onClick={() => setCurrentScreen('home')}
-              className="flex flex-col items-center gap-1 px-4 py-1"
-            >
-              <Icon name="Home" size={24} className="text-blue-600" />
-              <span className="text-xs font-medium text-blue-600">{t.nav.home}</span>
-            </button>
-
-            <button
-              onClick={() => setCurrentScreen('payments')}
-              className="flex flex-col items-center gap-1 px-4 py-1"
-            >
-              <Icon name="CreditCard" size={24} className="text-gray-400" />
-              <span className="text-xs text-gray-500">{t.nav.payments}</span>
+              <span className="text-xs text-gray-700 text-center">Голосования</span>
             </button>
 
             <button
               onClick={() => setCurrentScreen('ai')}
-              className="relative -mt-6"
+              className="flex flex-col items-center gap-2 p-2"
             >
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center shadow-xl">
-                <Icon name="Sparkles" size={28} className="text-white" />
+              <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center">
+                <Icon name="Bot" className="text-indigo-600" size={28} />
               </div>
-            </button>
-
-            <button
-              onClick={() => setCurrentScreen('requests')}
-              className="flex flex-col items-center gap-1 px-4 py-1 relative"
-            >
-              <Icon name="FileText" size={24} className="text-gray-400" />
-              <span className="text-xs text-gray-500">{t.nav.requests}</span>
-              <span className="absolute top-0 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
-
-            <button
-              onClick={() => setCurrentScreen('chat')}
-              className="flex flex-col items-center gap-1 px-4 py-1 relative"
-            >
-              <Icon name="MessageCircle" size={24} className="text-gray-400" />
-              <span className="text-xs text-gray-500">{t.nav.chat}</span>
-              <span className="absolute top-0 right-2 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">3</span>
+              <span className="text-xs text-gray-700 text-center">AI помощник</span>
             </button>
           </div>
         </div>
+      </div>
+
+        </>
       )}
+
+      {/* Нижняя навигация - всегда видна */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+        <div className="grid grid-cols-5 px-2 py-2">
+          <button
+            onClick={() => setCurrentScreen('home')}
+            className="flex flex-col items-center gap-1 py-2"
+          >
+            <Icon name="Home" size={24} className={currentScreen === 'home' ? 'text-blue-600' : 'text-gray-400'} />
+            <span className={`text-[10px] font-medium ${currentScreen === 'home' ? 'text-blue-600' : 'text-gray-400'}`}>Дома</span>
+          </button>
+
+          <button
+            onClick={() => setCurrentScreen('payments')}
+            className="flex flex-col items-center gap-1 py-2"
+          >
+            <Icon name="CreditCard" size={24} className={currentScreen === 'payments' ? 'text-blue-600' : 'text-gray-400'} />
+            <span className={`text-[10px] ${currentScreen === 'payments' ? 'text-blue-600' : 'text-gray-400'}`}>Оплаты</span>
+          </button>
+
+          <button
+            onClick={() => setCurrentScreen('requests')}
+            className="flex flex-col items-center gap-1 py-2 relative"
+          >
+            <div className="relative">
+              <Icon name="FileText" size={24} className={currentScreen === 'requests' ? 'text-blue-600' : 'text-gray-400'} />
+              <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+            </div>
+            <span className={`text-[10px] ${currentScreen === 'requests' ? 'text-blue-600' : 'text-gray-400'}`}>Заявки</span>
+          </button>
+
+          <button
+            onClick={() => setCurrentScreen('chat')}
+            className="flex flex-col items-center gap-1 py-2"
+          >
+            <Icon name="MessageCircle" size={24} className={currentScreen === 'chat' ? 'text-blue-600' : 'text-gray-400'} />
+            <span className={`text-[10px] ${currentScreen === 'chat' ? 'text-blue-600' : 'text-gray-400'}`}>Чаты</span>
+          </button>
+
+          <button
+            onClick={() => setCurrentScreen('services')}
+            className="flex flex-col items-center gap-1 py-2"
+          >
+            <Icon name="LayoutGrid" size={24} className={currentScreen === 'services' ? 'text-blue-600' : 'text-gray-400'} />
+            <span className={`text-[10px] ${currentScreen === 'services' ? 'text-blue-600' : 'text-gray-400'}`}>Услуги</span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

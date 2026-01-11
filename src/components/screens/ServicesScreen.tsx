@@ -6,8 +6,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
-import { useLanguage } from '@/context/LanguageContext';
-import { formatSomoni } from '@/data/tajikData';
 
 interface ServicesScreenProps {
   onBack: () => void;
@@ -15,87 +13,80 @@ interface ServicesScreenProps {
 
 interface Service {
   id: string;
-  titleKey: 'construction' | 'electricity' | 'cleaning' | 'plumbing' | 'otherServices';
+  title: string;
   icon: string;
   color: string;
-  price: number | null;
+  description: string;
+  price: string;
   rating: number;
   reviews: number;
 }
 
 const ServicesScreen = ({ onBack }: ServicesScreenProps) => {
-  const { t } = useLanguage();
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [orderDetails, setOrderDetails] = useState({
     date: '',
     time: '',
     comment: '',
-    phone: '',
   });
 
   const services: Service[] = [
     {
       id: '1',
-      titleKey: 'construction',
+      title: 'Строительные работы',
       icon: '🔨',
       color: 'from-orange-50 to-orange-100',
-      price: 150,
+      description: 'Ремонт, отделка, установка конструкций',
+      price: 'от 1500 ₽/час',
       rating: 4.8,
       reviews: 124,
     },
     {
       id: '2',
-      titleKey: 'electricity',
+      title: 'Электрика',
       icon: '⚡',
       color: 'from-purple-50 to-purple-100',
-      price: 120,
+      description: 'Установка розеток, светильников, ремонт проводки',
+      price: 'от 1200 ₽/час',
       rating: 4.9,
       reviews: 98,
     },
     {
       id: '3',
-      titleKey: 'cleaning',
+      title: 'Уборка помещений',
       icon: '🧹',
       color: 'from-green-50 to-green-100',
-      price: 250,
+      description: 'Генеральная, поддерживающая уборка квартиры',
+      price: 'от 2500 ₽',
       rating: 4.7,
       reviews: 156,
     },
     {
       id: '4',
-      titleKey: 'plumbing',
+      title: 'Сантехника',
       icon: '🔧',
       color: 'from-blue-50 to-blue-100',
-      price: 100,
+      description: 'Установка, ремонт сантехники и труб',
+      price: 'от 1000 ₽/час',
       rating: 4.8,
       reviews: 87,
     },
     {
       id: '5',
-      titleKey: 'otherServices',
+      title: 'Другое',
       icon: '➕',
       color: 'from-gray-50 to-gray-100',
-      price: null,
+      description: 'Другие бытовые услуги',
+      price: 'По договоренности',
       rating: 4.5,
       reviews: 43,
     },
   ];
 
   const handleOrderService = () => {
+    // Логика заказа услуги
     setSelectedService(null);
-    setOrderDetails({ date: '', time: '', comment: '', phone: '' });
-  };
-
-  const getServiceTitle = (titleKey: Service['titleKey']) => {
-    return t.services[titleKey];
-  };
-
-  const getServiceDescription = (titleKey: Service['titleKey']) => {
-    return t.services[`${titleKey}Desc` as keyof typeof t.services];
-  };
-
-  const getPriceDisplay = (price: number | null) => {
-    return price ? `от ${formatSomoni(price)}/час` : t.services.byAgreement;
+    setOrderDetails({ date: '', time: '', comment: '' });
   };
 
   return (
@@ -107,8 +98,8 @@ const ServicesScreen = ({ onBack }: ServicesScreenProps) => {
             <Icon name="ArrowLeft" size={24} />
           </Button>
           <div className="flex-1">
-            <h1 className="text-xl font-bold text-gray-900">{t.services.title}</h1>
-            <p className="text-sm text-gray-600">{t.services.subtitle}</p>
+            <h1 className="text-xl font-bold text-gray-900">Платные услуги</h1>
+            <p className="text-sm text-gray-600">Выберите нужную услугу</p>
           </div>
         </div>
       </div>
@@ -127,9 +118,9 @@ const ServicesScreen = ({ onBack }: ServicesScreenProps) => {
               </div>
               <CardContent className="p-4">
                 <h3 className="font-bold text-gray-900 text-base mb-3 line-clamp-2 min-h-[48px]">
-                  {getServiceTitle(service.titleKey)}
+                  {service.title}
                 </h3>
-                <p className="text-sm font-semibold text-gray-700">{getPriceDisplay(service.price)}</p>
+                <p className="text-sm font-semibold text-gray-700">{service.price}</p>
               </CardContent>
             </Card>
           ))}
@@ -142,37 +133,33 @@ const ServicesScreen = ({ onBack }: ServicesScreenProps) => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-3">
               <span className="text-3xl">{selectedService?.icon}</span>
-              <span>{selectedService && getServiceTitle(selectedService.titleKey)}</span>
+              <span>{selectedService?.title}</span>
             </DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
             <div>
-              <p className="text-gray-600 text-sm mb-2">
-                {selectedService && getServiceDescription(selectedService.titleKey)}
-              </p>
+              <p className="text-gray-600 text-sm mb-2">{selectedService?.description}</p>
               <div className="flex items-center gap-2 text-sm">
                 <Badge variant="secondary" className="flex items-center gap-1">
                   <Icon name="Star" size={14} className="text-yellow-500 fill-yellow-500" />
                   {selectedService?.rating}
                 </Badge>
                 <span className="text-gray-600">
-                  {selectedService?.reviews} {t.services.reviews}
+                  {selectedService?.reviews} отзывов
                 </span>
               </div>
             </div>
 
             <div className="bg-blue-50 rounded-lg p-3">
-              <p className="text-sm text-gray-600 mb-1">{t.services.price}</p>
-              <p className="text-xl font-bold text-blue-600">
-                {selectedService && getPriceDisplay(selectedService.price)}
-              </p>
+              <p className="text-sm text-gray-600 mb-1">Стоимость услуги</p>
+              <p className="text-xl font-bold text-blue-600">{selectedService?.price}</p>
             </div>
 
             <div className="space-y-4">
               <div>
                 <label className="text-sm font-semibold text-gray-900 mb-2 block">
-                  {t.services.desiredDate} <span className="text-red-500">*</span>
+                  Желаемая дата <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <Icon name="Calendar" size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -189,7 +176,7 @@ const ServicesScreen = ({ onBack }: ServicesScreenProps) => {
 
               <div>
                 <label className="text-sm font-semibold text-gray-900 mb-2 block">
-                  {t.services.desiredTime} <span className="text-red-500">*</span>
+                  Желаемое время <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <Icon name="Clock" size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -206,10 +193,10 @@ const ServicesScreen = ({ onBack }: ServicesScreenProps) => {
 
               <div>
                 <label className="text-sm font-semibold text-gray-900 mb-2 block">
-                  {t.services.comment}
+                  Комментарий к заказу
                 </label>
                 <Textarea
-                  placeholder={t.services.commentPlaceholder}
+                  placeholder="Опишите подробности: объем работ, особые требования..."
                   value={orderDetails.comment}
                   onChange={(e) =>
                     setOrderDetails({ ...orderDetails, comment: e.target.value })
@@ -221,17 +208,13 @@ const ServicesScreen = ({ onBack }: ServicesScreenProps) => {
 
               <div>
                 <label className="text-sm font-semibold text-gray-900 mb-2 block">
-                  {t.services.contactPhone} <span className="text-red-500">*</span>
+                  Контактный телефон <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <Icon name="Phone" size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                   <Input
                     type="tel"
-                    placeholder="+992 (__) ___-__-__"
-                    value={orderDetails.phone}
-                    onChange={(e) =>
-                      setOrderDetails({ ...orderDetails, phone: e.target.value })
-                    }
+                    placeholder="+7 (___) ___-__-__"
                     className="pl-10 h-12 rounded-xl border-gray-300"
                   />
                 </div>
@@ -244,13 +227,13 @@ const ServicesScreen = ({ onBack }: ServicesScreenProps) => {
                 className="flex-1 h-12 rounded-xl font-semibold"
                 onClick={() => setSelectedService(null)}
               >
-                {t.cancel}
+                Отмена
               </Button>
               <Button
                 className="flex-1 h-12 rounded-xl bg-green-500 hover:bg-green-600 font-semibold"
                 onClick={handleOrderService}
               >
-                {t.services.orderService}
+                Заказать услугу
               </Button>
             </div>
           </div>

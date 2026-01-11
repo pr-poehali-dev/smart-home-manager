@@ -6,44 +6,39 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
-import { useLanguage } from '@/context/LanguageContext';
-import LanguageSwitcher from '@/components/LanguageSwitcher';
-import { tajikComplexes } from '@/data/tajikData';
 
 interface AuthScreenProps {
   onComplete: (userData: any) => void;
 }
 
 const AuthScreen = ({ onComplete }: AuthScreenProps) => {
-  const { t } = useLanguage();
   const [step, setStep] = useState<'phone' | 'code' | 'apartment'>('phone');
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
   const [apartment, setApartment] = useState('');
   const [entrance, setEntrance] = useState('');
-  const [complex, setComplex] = useState('');
   const [status, setStatus] = useState<'owner' | 'tenant'>('owner');
 
   const handlePhoneSubmit = () => {
     if (phone.length < 10) {
-      toast.error(t.requests.fillRequired);
+      toast.error('Введите корректный номер телефона');
       return;
     }
-    toast.success(t.auth.codeSentTo);
+    toast.success('Код отправлен на ваш телефон');
     setStep('code');
   };
 
   const handleCodeSubmit = () => {
     if (code.length !== 4) {
-      toast.error(t.requests.fillRequired);
+      toast.error('Введите 4-значный код');
       return;
     }
     setStep('apartment');
   };
 
   const handleApartmentSubmit = () => {
-    if (!apartment || !entrance || !complex) {
-      toast.error(t.requests.fillRequired);
+    if (!apartment || !entrance) {
+      toast.error('Заполните все поля');
       return;
     }
 
@@ -52,27 +47,24 @@ const AuthScreen = ({ onComplete }: AuthScreenProps) => {
       apartment,
       entrance,
       status,
-      complex: complex,
+      complex: 'ЖК Солнечный',
     };
 
-    toast.success(t.auth.welcome);
+    toast.success('Добро пожаловать!');
     onComplete(userData);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 flex items-center justify-center p-4 relative">
-      <div className="absolute top-4 right-4 z-50">
-        <LanguageSwitcher />
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md animate-fade-in">
         <CardHeader className="text-center pb-3">
           <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
             <Icon name="Building2" className="text-white" size={40} />
           </div>
           <CardTitle className="text-2xl font-heading">
-            {step === 'phone' && t.auth.login}
-            {step === 'code' && t.auth.enterCode}
-            {step === 'apartment' && t.auth.yourApartment}
+            {step === 'phone' && 'Вход в приложение'}
+            {step === 'code' && 'Введите код'}
+            {step === 'apartment' && 'Ваша квартира'}
           </CardTitle>
         </CardHeader>
 
@@ -80,13 +72,13 @@ const AuthScreen = ({ onComplete }: AuthScreenProps) => {
           {step === 'phone' && (
             <>
               <div className="space-y-2">
-                <Label htmlFor="phone">{t.auth.phone}</Label>
+                <Label htmlFor="phone">Номер телефона</Label>
                 <div className="relative">
                   <Icon name="Phone" className="absolute left-3 top-3 text-gray-400" size={20} />
                   <Input
                     id="phone"
                     type="tel"
-                    placeholder={t.auth.phonePlaceholder}
+                    placeholder="+7 (___) ___-__-__"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     className="pl-10"
@@ -95,7 +87,7 @@ const AuthScreen = ({ onComplete }: AuthScreenProps) => {
               </div>
 
               <Button onClick={handlePhoneSubmit} className="w-full" size="lg">
-                {t.auth.getCode}
+                Получить код
               </Button>
 
               <div className="relative my-6">
@@ -103,18 +95,18 @@ const AuthScreen = ({ onComplete }: AuthScreenProps) => {
                   <div className="w-full border-t border-gray-300" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">{t.auth.orLoginWith}</span>
+                  <span className="px-2 bg-white text-gray-500">или войти через</span>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <Button variant="outline" className="gap-2">
                   <Icon name="Mail" size={18} />
-                  {t.auth.email}
+                  Email
                 </Button>
                 <Button variant="outline" className="gap-2">
                   <Icon name="Fingerprint" size={18} />
-                  {t.auth.bioId}
+                  Bio ID
                 </Button>
               </div>
             </>
@@ -124,13 +116,13 @@ const AuthScreen = ({ onComplete }: AuthScreenProps) => {
             <>
               <div className="text-center mb-4">
                 <p className="text-sm text-gray-600">
-                  {t.auth.codeSentTo} <br />
+                  Код отправлен на номер <br />
                   <span className="font-semibold">{phone}</span>
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="code">{t.auth.confirmCode}</Label>
+                <Label htmlFor="code">Код подтверждения</Label>
                 <Input
                   id="code"
                   type="text"
@@ -143,11 +135,11 @@ const AuthScreen = ({ onComplete }: AuthScreenProps) => {
               </div>
 
               <Button onClick={handleCodeSubmit} className="w-full" size="lg">
-                {t.auth.confirm}
+                Подтвердить
               </Button>
 
               <Button variant="ghost" className="w-full" onClick={() => setStep('phone')}>
-                {t.auth.changeNumber}
+                Изменить номер
               </Button>
             </>
           )}
@@ -155,23 +147,7 @@ const AuthScreen = ({ onComplete }: AuthScreenProps) => {
           {step === 'apartment' && (
             <>
               <div className="space-y-2">
-                <Label htmlFor="complex">{t.profile.complex}</Label>
-                <Select value={complex} onValueChange={setComplex}>
-                  <SelectTrigger>
-                    <SelectValue placeholder={t.profile.complexPlaceholder} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {tajikComplexes.map((c) => (
-                      <SelectItem key={c} value={c}>
-                        {c}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="apartment">{t.auth.apartmentNumber}</Label>
+                <Label htmlFor="apartment">Номер квартиры</Label>
                 <Input
                   id="apartment"
                   type="text"
@@ -182,7 +158,7 @@ const AuthScreen = ({ onComplete }: AuthScreenProps) => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="entrance">{t.auth.entrance}</Label>
+                <Label htmlFor="entrance">Подъезд / Корпус</Label>
                 <Input
                   id="entrance"
                   type="text"
@@ -193,14 +169,14 @@ const AuthScreen = ({ onComplete }: AuthScreenProps) => {
               </div>
 
               <div className="space-y-2">
-                <Label>{t.auth.yourStatus}</Label>
+                <Label>Ваш статус</Label>
                 <Select value={status} onValueChange={(value: 'owner' | 'tenant') => setStatus(value)}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="owner">{t.auth.owner}</SelectItem>
-                    <SelectItem value="tenant">{t.auth.tenant}</SelectItem>
+                    <SelectItem value="owner">Собственник</SelectItem>
+                    <SelectItem value="tenant">Арендатор</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -208,12 +184,12 @@ const AuthScreen = ({ onComplete }: AuthScreenProps) => {
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-start gap-2">
                 <Icon name="Info" className="text-blue-600 mt-0.5" size={18} />
                 <p className="text-sm text-gray-700">
-                  {t.auth.verificationInfo}
+                  Ваши данные будут проверены управляющей компанией в течение 24 часов
                 </p>
               </div>
 
               <Button onClick={handleApartmentSubmit} className="w-full" size="lg">
-                {t.auth.continue}
+                Продолжить
               </Button>
             </>
           )}
